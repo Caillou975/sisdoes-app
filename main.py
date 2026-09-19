@@ -248,4 +248,5 @@ def main(page: ft.Page):
     mostrar_login()
 
 # Se añade assets_dir para que Flet sepa dónde buscar la imagen al probar localmente
-ft.app(target=main, assets_dir="assets")
+if __name__ == "__main__":
+    ft.app(target=main, assets_dir="assets")
