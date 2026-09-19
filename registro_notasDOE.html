@@ -1,0 +1,781 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <title>Control de Aptitud Física - Operadores Especiales FAP</title>
+    <style>
+        /* Variables y Configuración General */
+        :root {
+            --primary: #0b2545;
+            --secondary: #134074;
+            --success: #198754;
+            --danger: #dc3545;
+            --bg-body: #f0f4f8;
+            --bg-panel: #f8f9fa;
+            --text-main: #1a2a3a;
+            --text-muted: #555;
+            --border-color: #cfd8dc;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: var(--bg-body);
+            color: var(--text-main);
+            padding: 15px;
+            font-size: 15px;
+        }
+
+        .container {
+            max-width: 1250px;
+            margin: auto;
+            background: #ffffff;
+            padding: 25px 20px;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            border-top: 15px solid var(--primary);
+        }
+
+        /* Encabezado */
+        .header-fap {
+            text-align: center;
+            margin-bottom: 25px;
+            padding-bottom: 15px;
+            border-bottom: 2px dashed var(--primary);
+        }
+        .header-fap h1 {
+            color: var(--primary);
+            font-size: 26px;
+            letter-spacing: 1px;
+            margin-bottom: 5px;
+            font-weight: bold;
+        }
+        .header-fap h2 {
+            color: var(--secondary);
+            font-size: 18px;
+            font-weight: bold;
+        }
+
+        /* Diseño de Cuadrícula (Formulario) */
+        .grid-form {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 20px;
+            margin-bottom: 20px;
+        }
+        .panel {
+            background: var(--bg-panel);
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+        }
+        .panel h3 {
+            color: var(--primary);
+            border-bottom: 2px solid var(--secondary);
+            padding-bottom: 8px;
+            margin-bottom: 15px;
+            font-size: 18px;
+        }
+
+        /* Campos de Entrada */
+        .form-group {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+            margin-bottom: 15px;
+        }
+        .input-box {
+            display: flex;
+            flex-direction: column;
+            flex: 1 1 130px;
+        }
+        .input-box label {
+            font-weight: bold;
+            font-size: 14px;
+            margin-bottom: 5px;
+            color: #334e68;
+        }
+        .input-box input, .input-box select {
+            font-family: 'Times New Roman', Times, serif;
+            padding: 10px;
+            border: 1px solid #b0c4de;
+            border-radius: 5px;
+            font-size: 15px;
+            background-color: #fff;
+            transition: border 0.3s;
+        }
+        .input-box input:focus, .input-box select:focus {
+            border-color: var(--secondary);
+            outline: none;
+        }
+        
+        .time-inputs {
+            display: flex;
+            gap: 5px;
+        }
+        .time-inputs input {
+            width: 100%;
+            text-align: center;
+        }
+        
+        .nota-preview {
+            display: inline-block;
+            margin-top: 5px;
+            font-size: 13px;
+            font-weight: bold;
+            color: var(--secondary);
+            background: #e1e8ed;
+            padding: 4px 6px;
+            border-radius: 4px;
+            text-align: center;
+        }
+
+        button {
+            font-family: 'Times New Roman', Times, serif;
+            background-color: var(--primary);
+            color: white;
+            border: none;
+            padding: 14px 20px;
+            cursor: pointer;
+            border-radius: 5px;
+            font-size: 17px;
+            font-weight: bold;
+            width: 100%;
+            transition: background 0.3s;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.2);
+        }
+        button:hover {
+            background-color: var(--secondary);
+        }
+
+        /* Barra de Gestión de Datos (Importar/Exportar) */
+        .toolbar-datos {
+            background: #eef2f6;
+            padding: 15px;
+            border-radius: 8px;
+            border: 1px solid var(--border-color);
+            margin-top: 25px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+        .toolbar-datos h4 {
+            color: var(--primary);
+            font-size: 16px;
+        }
+        .btn-group-datos {
+            display: flex;
+            gap: 10px;
+            flex-wrap: wrap;
+        }
+        .btn-accion {
+            width: auto;
+            padding: 9px 15px;
+            font-size: 14px;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+        }
+        .btn-export { background-color: var(--success); }
+        .btn-export:hover { background-color: #146c43; }
+        .btn-import { background-color: var(--secondary); }
+        .btn-import:hover { background-color: #0b2545; }
+        .btn-danger { background-color: var(--danger); }
+        .btn-danger:hover { background-color: #b02a37; }
+
+        /* Tabla General */
+        .table-container {
+            overflow-x: auto;
+            margin-top: 15px;
+            border-radius: 5px;
+            box-shadow: 0 0 5px rgba(0,0,0,0.05);
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            font-size: 14px;
+            min-width: 900px;
+        }
+        th, td {
+            border: 1px solid var(--border-color);
+            padding: 12px 10px;
+            text-align: center;
+            vertical-align: middle;
+        }
+        th {
+            background-color: var(--primary);
+            color: white;
+            font-weight: bold;
+            white-space: nowrap;
+        }
+        tr:nth-child(even) { background-color: #f4f6f8; }
+        
+        .nota-celda { font-size: 12px; color: var(--text-muted); display: block; margin-top: 2px;}
+        .promedio-text { font-weight: bold; font-size: 15px; }
+        .badge {
+            font-weight: bold;
+            padding: 5px 8px;
+            border-radius: 4px;
+            display: inline-block;
+            font-size: 12px;
+            white-space: nowrap;
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
+        /* Módulo de Consulta */
+        .seccion-consulta {
+            margin-top: 40px;
+            background-color: #eef5fc;
+            padding: 20px;
+            border-radius: 8px;
+            border-left: 6px solid var(--secondary);
+        }
+        .buscar-bar {
+            display: flex;
+            gap: 10px;
+            align-items: flex-end;
+            margin-bottom: 10px;
+        }
+        .btn-buscar {
+            width: auto;
+            padding: 10px 20px;
+        }
+
+        .resultado-card {
+            margin-top: 20px;
+            background: white;
+            padding: 20px;
+            border-radius: 8px;
+            border: 1px solid #b0c4de;
+            display: none;
+        }
+        .resumen-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            flex-wrap: wrap;
+            gap: 15px;
+        }
+        .resumen-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(110px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+        .resumen-box {
+            background: #f1f5f9;
+            padding: 12px;
+            border-radius: 6px;
+            text-align: center;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.05);
+        }
+
+        @media (max-width: 850px) {
+            .grid-form { grid-template-columns: 1fr; }
+            .toolbar-datos { flex-direction: column; align-items: stretch; text-align: center; }
+            .btn-group-datos { flex-direction: column; }
+            .btn-accion { width: 100%; justify-content: center; }
+        }
+
+        @media (max-width: 600px) {
+            body { padding: 10px; }
+            .container { padding: 15px 15px; border-top-width: 10px; }
+            .header-fap h1 { font-size: 22px; }
+            .header-fap h2 { font-size: 16px; }
+            .input-box { flex: 1 1 100%; }
+            .buscar-bar { flex-direction: column; align-items: stretch; }
+            .btn-buscar { width: 100%; }
+            .resumen-header { flex-direction: column; align-items: flex-start; text-align: left; }
+            .resumen-header > div:last-child {
+                text-align: left;
+                width: 100%;
+                background: #f8f9fa;
+                padding: 10px;
+                border-radius: 5px;
+                border: 1px solid #ddd;
+            }
+            h3 { font-size: 17px; }
+        }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <div class="header-fap">
+        <h1>FUERZA AÉREA DEL PERÚ</h1>
+        <h2>Evaluación Física - Operadores Especiales</h2>
+    </div>
+
+    <form id="evaluacionForm">
+        <div class="grid-form">
+            <div class="panel">
+                <h3>1. Datos del Operador</h3>
+                <div class="form-group">
+                    <div class="input-box">
+                        <label for="nsa">NSA (6 dígitos)</label>
+                        <input type="text" id="nsa" pattern="\d{6}" maxlength="6" inputmode="numeric" placeholder="Ej: 123456" required>
+                    </div>
+                    <div class="input-box">
+                        <label for="grado">Grado</label>
+                        <select id="grado" required>
+                            <option value="" disabled selected>Seleccione...</option>
+                            <option value="AL1">AL1</option>
+                            <option value="AL2">AL2</option>
+                            <option value="AL3">AL3</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-box">
+                        <label for="especialidad">Especialidad</label>
+                        <input type="text" id="especialidad" placeholder="Ej: DOEX / Comandos" required>
+                    </div>
+                    <div class="input-box">
+                        <label for="nombre">Apellidos y Nombres</label>
+                        <input type="text" id="nombre" placeholder="Ej: RUIZ DIAZ CARLOS" required>
+                    </div>
+                </div>
+            </div>
+
+            <div class="panel">
+                <h3>2. Marcas Físicas</h3>
+                <div class="form-group">
+                    <div class="input-box">
+                        <label>Natación (500m)</label>
+                        <div class="time-inputs">
+                            <input type="number" id="nat_m" placeholder="Min" min="0" max="50" inputmode="numeric" required>
+                            <input type="number" id="nat_s" placeholder="Seg" min="0" max="59" inputmode="numeric" required>
+                        </div>
+                        <span class="nota-preview" id="preview_nat">Nota: --</span>
+                    </div>
+                    <div class="input-box">
+                        <label for="planchas">Planchas (2 min)</label>
+                        <input type="number" id="planchas" placeholder="Repeticiones" min="0" inputmode="numeric" required>
+                        <span class="nota-preview" id="preview_pla">Nota: --</span>
+                    </div>
+                    <div class="input-box">
+                        <label for="abdominales">Abdominales (2 min)</label>
+                        <input type="number" id="abdominales" placeholder="Repeticiones" min="0" inputmode="numeric" required>
+                        <span class="nota-preview" id="preview_abd">Nota: --</span>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="input-box">
+                        <label>Carrera (3200m)</label>
+                        <div class="time-inputs">
+                            <input type="number" id="car_m" placeholder="Min" min="0" max="50" inputmode="numeric" required>
+                            <input type="number" id="car_s" placeholder="Seg" min="0" max="59" inputmode="numeric" required>
+                        </div>
+                        <span class="nota-preview" id="preview_car">Nota: --</span>
+                    </div>
+                    <div class="input-box">
+                        <label for="barras">Barras</label>
+                        <input type="number" id="barras" placeholder="Repeticiones" min="0" inputmode="numeric" required>
+                        <span class="nota-preview" id="preview_bar">Nota: --</span>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <button type="submit">Calcular y Guardar Registro</button>
+    </form>
+
+    <!-- Barra de Herramientas para Exportar e Importar CSV/Excel -->
+    <div class="toolbar-datos">
+        <h4>📂 Gestión de Archivos y Respaldo</h4>
+        <div class="btn-group-datos">
+            <button type="button" class="btn-accion btn-export" onclick="exportarCSV()">📥 Descargar a CSV (Excel)</button>
+            <button type="button" class="btn-accion btn-import" onclick="document.getElementById('fileInput').click()">📤 Cargar Archivo CSV</button>
+            <button type="button" class="btn-accion btn-danger" onclick="limpiarBaseDatos()">🗑️ Limpiar Datos</button>
+            <input type="file" id="fileInput" accept=".csv" style="display: none;" onchange="cargarCSV(event)">
+        </div>
+    </div>
+
+    <h3 style="margin-top: 25px; color: var(--primary);">Lista General de Evaluados <small style="font-size:12px; color:#777; font-family: Arial, sans-serif;">(Deslice la tabla ↔️)</small></h3>
+    <div class="table-container">
+        <table>
+            <thead>
+                <tr>
+                    <th>NSA</th>
+                    <th>Grado</th>
+                    <th>Apellidos y Nombres</th>
+                    <th>Natación</th>
+                    <th>Planchas</th>
+                    <th>Abdominales</th>
+                    <th>Carrera</th>
+                    <th>Barras</th>
+                    <th>Puntos</th>
+                    <th>Promedio</th>
+                    <th>Evaluación</th>
+                </tr>
+            </thead>
+            <tbody id="tablaCuerpo">
+            </tbody>
+        </table>
+    </div>
+
+    <div class="seccion-consulta">
+        <h3 style="margin-top:0; color: var(--primary);">Consulta Rápida de Operador</h3>
+        <div class="buscar-bar">
+            <div class="input-box" style="flex: 1;">
+                <label for="buscarNsa">Ingrese NSA (6 dígitos)</label>
+                <input type="text" id="buscarNsa" maxlength="6" inputmode="numeric" placeholder="Ej: 123456">
+            </div>
+            <button type="button" id="btnBuscar" class="btn-buscar">Buscar Operador</button>
+        </div>
+
+        <div id="resultadoConsulta" class="resultado-card">
+        </div>
+    </div>
+</div>
+
+<script>
+    // Memoria local en navegador
+    let BD_OPERADORES = JSON.parse(localStorage.getItem('fap_operadores_db')) || [];
+
+    function calcularNotaTiempo(minutos, segundos, tipo) {
+        const m = parseInt(minutos) || 0;
+        const s = parseInt(segundos) || 0;
+        const totalSegundos = (m * 60) + s;
+        if(totalSegundos === 0) return 0;
+
+        if (tipo === 'natacion') {
+            if (totalSegundos <= 580) return 25; 
+            for (let P = 24.5; P >= 0; P -= 0.5) {
+                const k = (25 - P) / 0.5;
+                const maxSegundos = 580 + (8 * k);
+                if (totalSegundos <= maxSegundos) return P;
+            }
+            return 0;
+        } 
+        else if (tipo === 'carrera') {
+            if (totalSegundos <= 675) return 25; 
+            for (let P = 24.5; P >= 0; P -= 0.5) {
+                const k = (25 - P) / 0.5;
+                const maxSegundos = 675 + (15 * k);
+                if (totalSegundos <= maxSegundos) return P;
+            }
+            return 0;
+        }
+        return 0;
+    }
+
+    function calcularNotaReps(cantidad, tipo) {
+        const reps = parseInt(cantidad) || 0;
+        if (tipo === 'planchas' || tipo === 'abdominales') {
+            if (reps >= 99) return 25;
+            for (let P = 24.5; P >= 0; P -= 0.5) {
+                const k = (25 - P) / 0.5;
+                const minReps = 99 - (2 * k);
+                if (reps >= minReps) return P;
+            }
+            return 0;
+        } 
+        else if (tipo === 'barras') {
+            if (reps >= 30) return 25;
+            const P = (reps * 0.5) + 10;
+            return P >= 10 ? P : 10; 
+        }
+        return 0;
+    }
+
+    function obtenerEvaluacion(puntosTotales) {
+        if (puntosTotales >= 90) return { texto: 'SOBRESALIENTE', bg: '#d4edda', col: '#155724' };
+        if (puntosTotales >= 80) return { texto: 'MUY BUENO', bg: '#cce5ff', col: '#004085' };
+        if (puntosTotales >= 70) return { texto: 'BUENO', bg: '#fff3cd', col: '#856404' };
+        if (puntosTotales >= 60) return { texto: 'REGULAR', bg: '#ffe8a1', col: '#854004' };
+        return { texto: 'DEFICIENTE', bg: '#f8d7da', col: '#721c24' };
+    }
+
+    function asociarPreviews() {
+        const inputs = [
+            {ids: ['nat_m', 'nat_s'], out: 'preview_nat', tipo: 'time', name: 'natacion'},
+            {ids: ['car_m', 'car_s'], out: 'preview_car', tipo: 'time', name: 'carrera'},
+            {ids: ['planchas'], out: 'preview_pla', tipo: 'reps', name: 'planchas'},
+            {ids: ['abdominales'], out: 'preview_abd', tipo: 'reps', name: 'abdominales'},
+            {ids: ['barras'], out: 'preview_bar', tipo: 'reps', name: 'barras'}
+        ];
+
+        inputs.forEach(item => {
+            item.ids.forEach(id => {
+                document.getElementById(id).addEventListener('input', () => {
+                    let nota = 0;
+                    if(item.tipo === 'time') {
+                        const m = document.getElementById(item.ids[0]).value;
+                        const s = document.getElementById(item.ids[1]).value;
+                        nota = calcularNotaTiempo(m, s, item.name);
+                    } else {
+                        const val = document.getElementById(item.ids[0]).value;
+                        nota = calcularNotaReps(val, item.name);
+                    }
+                    document.getElementById(item.out).innerText = `Nota: ${nota.toFixed(1)} pts`;
+                });
+            });
+        });
+    }
+    asociarPreviews();
+
+    document.getElementById('evaluacionForm').addEventListener('submit', function(e) {
+        e.preventDefault();
+
+        const nsa = document.getElementById('nsa').value;
+        const grado = document.getElementById('grado').value;
+        const especialidad = document.getElementById('especialidad').value.toUpperCase();
+        const nombre = document.getElementById('nombre').value.toUpperCase();
+
+        const nat_m = document.getElementById('nat_m').value;
+        const nat_s = document.getElementById('nat_s').value;
+        const n_planchas = document.getElementById('planchas').value;
+        const n_abdominales = document.getElementById('abdominales').value;
+        const car_m = document.getElementById('car_m').value;
+        const car_s = document.getElementById('car_s').value;
+        const n_barras = document.getElementById('barras').value;
+
+        const nota_nat = calcularNotaTiempo(nat_m, nat_s, 'natacion');
+        const nota_pla = calcularNotaReps(n_planchas, 'planchas');
+        const nota_abd = calcularNotaReps(n_abdominales, 'abdominales');
+        const nota_car = calcularNotaTiempo(car_m, car_s, 'carrera');
+        const nota_bar = calcularNotaReps(n_barras, 'barras');
+
+        const totalPuntos = nota_nat + nota_pla + nota_abd + nota_car + nota_bar;
+        const promedio = totalPuntos / 5;
+        const evaluacionObj = obtenerEvaluacion(totalPuntos);
+
+        const operador = {
+            nsa, grado, especialidad, nombre,
+            marca_nat: `${nat_m.padStart(2,'0')}:${nat_s.padStart(2,'0')}`, nota_nat,
+            marca_pla: n_planchas, nota_pla,
+            marca_abd: n_abdominales, nota_abd,
+            marca_car: `${car_m.padStart(2,'0')}:${car_s.padStart(2,'0')}`, nota_car,
+            marca_bar: n_barras, nota_bar,
+            totalPuntos,
+            promedio,
+            evaluacion: evaluacionObj
+        };
+
+        const idx = BD_OPERADORES.findIndex(o => o.nsa === nsa);
+        if (idx >= 0) {
+            BD_OPERADORES[idx] = operador;
+        } else {
+            BD_OPERADORES.push(operador);
+        }
+
+        localStorage.setItem('fap_operadores_db', JSON.stringify(BD_OPERADORES));
+        renderizarTabla();
+
+        document.getElementById('evaluacionForm').reset();
+        document.querySelectorAll('.nota-preview').forEach(el => el.innerText = "Nota: --");
+        document.getElementById('nsa').focus();
+    });
+
+    function renderizarTabla() {
+        const tbody = document.getElementById('tablaCuerpo');
+        tbody.innerHTML = "";
+
+        BD_OPERADORES.forEach(op => {
+            const tr = document.createElement('tr');
+            tr.innerHTML = `
+                <td><strong>${op.nsa}</strong></td>
+                <td>${op.grado}</td>
+                <td style="text-align: left; min-width: 180px;">${op.nombre} <br><small style="color:#777; font-family: Arial, sans-serif;">${op.especialidad}</small></td>
+                <td>${op.marca_nat}<span class="nota-celda">(${op.nota_nat.toFixed(1)})</span></td>
+                <td>${op.marca_pla} rep<span class="nota-celda">(${op.nota_pla.toFixed(1)})</span></td>
+                <td>${op.marca_abd} rep<span class="nota-celda">(${op.nota_abd.toFixed(1)})</span></td>
+                <td>${op.marca_car}<span class="nota-celda">(${op.nota_car.toFixed(1)})</span></td>
+                <td>${op.marca_bar} rep<span class="nota-celda">(${op.nota_bar.toFixed(1)})</span></td>
+                <td style="font-weight: bold; font-size: 16px;">${op.totalPuntos.toFixed(1)}</td>
+                <td class="promedio-text" style="color: ${op.promedio >= 13 ? '#155724' : '#721c24'};">${op.promedio.toFixed(2)}</td>
+                <td><span class="badge" style="background-color: ${op.evaluacion.bg}; color: ${op.evaluacion.col}">${op.evaluacion.texto}</span></td>
+            `;
+            tbody.appendChild(tr);
+        });
+    }
+
+    document.getElementById('btnBuscar').addEventListener('click', function() {
+        const nsaBuscado = document.getElementById('buscarNsa').value;
+        const card = document.getElementById('resultadoConsulta');
+
+        if(nsaBuscado.length !== 6) {
+            alert("Ingrese un NSA válido de 6 dígitos.");
+            return;
+        }
+
+        const op = BD_OPERADORES.find(o => o.nsa === nsaBuscado);
+
+        if(op) {
+            card.style.display = "block";
+            card.innerHTML = `
+                <div class="resumen-header">
+                    <div>
+                        <h3 style="margin-top:0; margin-bottom:5px; color:var(--primary); font-size: 20px;">${op.nombre}</h3>
+                        <p style="margin:0; color:var(--text-muted); font-size: 14px; font-family: Arial, sans-serif;"><strong>NSA:</strong> ${op.nsa} &nbsp;|&nbsp; <strong>Grado:</strong> ${op.grado} <br> <strong>Esp:</strong> ${op.especialidad}</p>
+                    </div>
+                    <div>
+                        <div style="font-size:20px; font-weight:bold; color:var(--secondary);">Total: ${op.totalPuntos.toFixed(1)} pts</div>
+                        <div style="font-size:16px; margin-bottom:8px; font-weight:bold; color:${op.promedio >= 13 ? 'green':'red'};">Promedio: ${op.promedio.toFixed(2)}</div>
+                        <span class="badge" style="background-color: ${op.evaluacion.bg}; color: ${op.evaluacion.col}; font-size: 14px;">NIVEL: ${op.evaluacion.texto}</span>
+                    </div>
+                </div>
+                <hr style="border: 0; border-top: 1px dashed var(--border-color); margin: 15px 0;">
+                <h4 style="margin-top:0; margin-bottom:10px; color: var(--primary);">Desglose de Pruebas:</h4>
+                <div class="resumen-grid">
+                    <div class="resumen-box">
+                        <strong style="font-size: 14px;">Natación</strong><br>${op.marca_nat}<br><span style="color:var(--secondary); font-weight:bold; font-size: 16px;">${op.nota_nat.toFixed(1)} pts</span>
+                    </div>
+                    <div class="resumen-box">
+                        <strong style="font-size: 14px;">Planchas</strong><br>${op.marca_pla} rep<br><span style="color:var(--secondary); font-weight:bold; font-size: 16px;">${op.nota_pla.toFixed(1)} pts</span>
+                    </div>
+                    <div class="resumen-box">
+                        <strong style="font-size: 14px;">Abdominales</strong><br>${op.marca_abd} rep<br><span style="color:var(--secondary); font-weight:bold; font-size: 16px;">${op.nota_abd.toFixed(1)} pts</span>
+                    </div>
+                    <div class="resumen-box">
+                        <strong style="font-size: 14px;">Carrera</strong><br>${op.marca_car}<br><span style="color:var(--secondary); font-weight:bold; font-size: 16px;">${op.nota_car.toFixed(1)} pts</span>
+                    </div>
+                    <div class="resumen-box">
+                        <strong style="font-size: 14px;">Barras</strong><br>${op.marca_bar} rep<br><span style="color:var(--secondary); font-weight:bold; font-size: 16px;">${op.nota_bar.toFixed(1)} pts</span>
+                    </div>
+                </div>
+            `;
+        } else {
+            card.style.display = "block";
+            card.innerHTML = `<p style="color:#721c24; font-weight:bold; margin:0; padding: 10px; background: #f8d7da; border-radius: 5px;">⚠️ NSA no encontrado en los registros de evaluación actuales.</p>`;
+        }
+    });
+
+    // ===============================================
+    // FUNCIONES DE EXPORTACIÓN E IMPORTACIÓN CSV/EXCEL
+    // ===============================================
+
+    function exportarCSV() {
+        if (BD_OPERADORES.length === 0) {
+            alert("No hay registros guardados para exportar.");
+            return;
+        }
+
+        // Se usa BOM (\uFEFF) y punto y coma (;) para que Excel en español lo abra perfecto
+        let csv = "\uFEFF";
+        csv += "NSA;Grado;Especialidad;Nombre;Natacion_Tiempo;Natacion_Nota;Planchas_Reps;Planchas_Nota;Abdominales_Reps;Abdominales_Nota;Carrera_Tiempo;Carrera_Nota;Barras_Reps;Barras_Nota;Total_Puntos;Promedio;Evaluacion\n";
+
+        BD_OPERADORES.forEach(op => {
+            const fila = [
+                `"${op.nsa}"`,
+                `"${op.grado}"`,
+                `"${op.especialidad}"`,
+                `"${op.nombre}"`,
+                `"${op.marca_nat}"`,
+                op.nota_nat,
+                `"${op.marca_pla}"`,
+                op.nota_pla,
+                `"${op.marca_abd}"`,
+                op.nota_abd,
+                `"${op.marca_car}"`,
+                op.nota_car,
+                `"${op.marca_bar}"`,
+                op.nota_bar,
+                op.totalPuntos,
+                op.promedio.toFixed(2),
+                `"${op.evaluacion.texto}"`
+            ].join(";");
+            csv += fila + "\n";
+        });
+
+        const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement("a");
+        a.href = url;
+        a.download = `Evaluaciones_FAP_${new Date().toISOString().slice(0,10)}.csv`;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+    }
+
+    function cargarCSV(event) {
+        const file = event.target.files[0];
+        if (!file) return;
+
+        const reader = new FileReader();
+        reader.onload = function(e) {
+            const contenido = e.target.result;
+            const lineas = contenido.split(/\r\n|\n/).filter(line => line.trim() !== "");
+
+            if (lineas.length < 2) {
+                alert("El archivo CSV está vacío o no tiene el formato correcto.");
+                return;
+            }
+
+            const separador = lineas[0].includes(";") ? ";" : ",";
+            const reemplazar = confirm("¿Desea REEMPLAZAR los datos actuales por los del archivo?\n\n- Oprima [Aceptar] para REEMPLAZAR.\n- Oprima [Cancelar] para COMBINAR con los datos existentes.");
+
+            if (reemplazar) {
+                BD_OPERADORES = [];
+            }
+
+            let cargados = 0;
+            for (let i = 1; i < lineas.length; i++) {
+                const cols = lineas[i].split(separador).map(c => c.replace(/^"|"$/g, '').trim());
+                if (cols.length >= 17) {
+                    const totalPuntos = parseFloat(cols[14]) || 0;
+                    const promedio = parseFloat(cols[15]) || (totalPuntos / 5);
+
+                    const op = {
+                        nsa: cols[0],
+                        grado: cols[1],
+                        especialidad: cols[2],
+                        nombre: cols[3],
+                        marca_nat: cols[4],
+                        nota_nat: parseFloat(cols[5]) || 0,
+                        marca_pla: cols[6],
+                        nota_pla: parseFloat(cols[7]) || 0,
+                        marca_abd: cols[8],
+                        nota_abd: parseFloat(cols[9]) || 0,
+                        marca_car: cols[10],
+                        nota_car: parseFloat(cols[11]) || 0,
+                        marca_bar: cols[12],
+                        nota_bar: parseFloat(cols[13]) || 0,
+                        totalPuntos: totalPuntos,
+                        promedio: promedio,
+                        evaluacion: obtenerEvaluacion(totalPuntos)
+                    };
+
+                    const idx = BD_OPERADORES.findIndex(o => o.nsa === op.nsa);
+                    if (idx >= 0) {
+                        BD_OPERADORES[idx] = op;
+                    } else {
+                        BD_OPERADORES.push(op);
+                    }
+                    cargados++;
+                }
+            }
+
+            localStorage.setItem('fap_operadores_db', JSON.stringify(BD_OPERADORES));
+            renderizarTabla();
+            alert(`¡Éxito! Se cargaron ${cargados} registros correctamente.`);
+            event.target.value = '';
+        };
+
+        reader.readAsText(file, 'UTF-8');
+    }
+
+    function limpiarBaseDatos() {
+        if (confirm("⚠️ ¿Está seguro de que desea BORRAR TODOS los registros del sistema?\n\nEsta acción no se puede deshacer a menos que tenga una copia en CSV.")) {
+            BD_OPERADORES = [];
+            localStorage.removeItem('fap_operadores_db');
+            renderizarTabla();
+            document.getElementById('resultadoConsulta').style.display = 'none';
+            alert("Base de datos borrada correctamente.");
+        }
+    }
+
+    // Cargar tabla inicial si existen datos
+    renderizarTabla();
+</script>
+
+</body>
+</html>
